@@ -158,3 +158,48 @@ textarea {
 .home-card.primary {
   border-left: 5px solid #000;
 }
+
+/* SEARCH UI */
+
+.search-box {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px; /* 👈 spacing between input & button */
+}
+
+/* Slightly smaller search bar */
+.search-input {
+  padding: 12px;      /* reduced from 14px */
+  font-size: 16px;    /* reduced from 18px */
+}
+
+/* Search button spacing already handled by gap */
+.search-btn {
+  font-size: 16px;
+}
+
+/* APP HEADER */
+
+.app-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.app-header h2 {
+  font-size: 18px;
+  margin: 0;
+}
+
+/* Top-left back button */
+.back-top {
+  width: 40px;
+  height: 40px;
+  font-size: 22px;
+  border-radius: 50%;
+  background: #eee;
+  color: #000;
+  border: none;
+}
