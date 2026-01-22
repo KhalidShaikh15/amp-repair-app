@@ -1,0 +1,160 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, Arial, sans-serif;
+  background: #f5f5f5;
+}
+
+.app {
+  max-width: 480px;        /* mobile-first */
+  margin: 0 auto;
+  padding: 16px;
+}
+
+h1 {
+  text-align: center;
+  font-size: 22px;
+  margin-bottom: 16px;
+}
+
+/* Inputs & buttons = finger friendly */
+input,
+button,
+textarea {
+  width: 100%;
+  padding: 14px;
+  font-size: 18px;
+  border-radius: 6px;
+}
+
+/* Button style */
+button {
+  background: #000;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+button:disabled {
+  background: #888;
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+/* Cards / result boxes */
+.details {
+  background: #fff;
+  padding: 16px;
+  border-radius: 8px;
+  margin-top: 12px;
+}
+
+/* Desktop enhancement (optional) */
+@media (min-width: 768px) {
+  .app {
+    max-width: 600px;
+  }
+}
+
+.form {
+  background: #fff;
+  padding: 16px;
+  border-radius: 8px;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.form h2 {
+  margin: 0 0 8px;
+  font-size: 20px;
+  text-align: center;
+}
+
+textarea {
+  resize: vertical;
+}
+
+.message {
+  font-size: 14px;
+  text-align: center;
+  color: green;
+}
+.home-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 40px;
+}
+
+.home-actions button {
+  font-size: 20px;
+  padding: 18px;
+}
+
+.back-btn {
+  margin-top: 24px;
+  background: transparent;
+  color: #000;
+  font-size: 16px;
+  text-align: left;
+  padding: 8px 0;
+} 
+
+/* HOME SCREEN */
+
+.home {
+  margin-top: 24px;
+  margin-bottom: 40px;
+}
+
+
+.home-title {
+  font-size: 18px;
+  text-align: center;
+  margin-bottom: 20px;
+  color: #444;
+}
+
+.home-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: #fff;
+  padding: 18px;
+  border-radius: 12px;
+  margin-bottom: 16px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  transition: transform 0.1s ease;
+}
+
+.home-card:active {
+  transform: scale(0.98);
+}
+
+.home-card .icon {
+  font-size: 28px;
+}
+
+.home-card h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.home-card p {
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: #666;
+}
+
+/* Highlight primary action */
+.home-card.primary {
+  border-left: 5px solid #000;
+}
