@@ -1,29 +1,65 @@
 import { useState } from "react"
-import { doc, getDoc } from "firebase/firestore"
+import {
+  doc,
+  getDoc,
+  collection,
+  query,
+  where,
+  getDocs
+} from "firebase/firestore"
 import { db } from "../firebase"
 
-function SearchBar({ onResult }) {
+function SearchBar({ onSingleResult, onMultipleResults }) {
+  const [mobile, setMobile] = useState("")
   const [serial, setSerial] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
 
   const handleSearch = async () => {
-    if (!serial.trim()) return
+    setError("")
+    onSingleResult(null)
+    onMultipleResults([])
+
+    if (!mobile.trim() && !serial.trim()) {
+      setError("Enter mobile number or serial number")
+      return
+    }
 
     setLoading(true)
-    setError("")
-    onResult(null)
 
     try {
-      const docRef = doc(db, "repairs", serial.trim())
-      const snap = await getDoc(docRef)
+      /* 1️⃣ MOBILE SEARCH (MULTIPLE) */
+      if (mobile.trim()) {
+        const q = query(
+          collection(db, "repairs"),
+          where("mobileNumber", "==", mobile.trim())
+        )
 
-      if (snap.exists()) {
-        onResult(snap.data())
-      } else {
-        setError("No record found")
+        const snapshot = await getDocs(q)
+
+        if (!snapshot.empty) {
+          const records = snapshot.docs.map(doc => doc.data())
+          onMultipleResults(records)
+          setLoading(false)
+          return
+        }
       }
+
+      /* 2️⃣ SERIAL SEARCH (SINGLE) */
+      if (serial.trim()) {
+        const ref = doc(db, "repairs", serial.trim())
+        const snap = await getDoc(ref)
+
+        if (snap.exists()) {
+          onSingleResult(snap.data())
+          setLoading(false)
+          return
+        }
+      }
+
+      setError("No record found")
     } catch (err) {
+      console.error(err)
       setError("Something went wrong")
     }
 
@@ -34,7 +70,17 @@ function SearchBar({ onResult }) {
     <div className="search-box">
       <input
         className="search-input"
-        placeholder="Enter Serial Number"
+        placeholder="Mobile Number"
+        inputMode="numeric"
+        value={mobile}
+        onChange={(e) => setMobile(e.target.value)}
+      />
+
+      <div className="search-or">OR</div>
+
+      <input
+        className="search-input"
+        placeholder="Serial Number"
         value={serial}
         onChange={(e) => setSerial(e.target.value)}
       />

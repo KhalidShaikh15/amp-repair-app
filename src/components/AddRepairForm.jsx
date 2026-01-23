@@ -3,6 +3,8 @@ import { doc, setDoc, getDoc, serverTimestamp } from "firebase/firestore"
 import { db } from "../firebase"
 
 function AddRepairForm({ onDone }) {
+  const today = new Date().toISOString().split("T")[0]
+
   const [form, setForm] = useState({
     brand: "",
     modelNumber: "",
@@ -10,6 +12,7 @@ function AddRepairForm({ onDone }) {
     clientName: "",
     mobileNumber: "",
     city: "",
+    dateReceived: today,
     repairAmount: "",
     courierCharge: "",
     problemDescription: ""
@@ -26,12 +29,28 @@ function AddRepairForm({ onDone }) {
     e.preventDefault()
     setMessage("")
 
+    /* ✅ REQUIRED VALIDATIONS */
     if (!form.serialNumber.trim()) {
       setMessage("Serial Number is required")
       return
     }
 
+    if (!form.mobileNumber.trim()) {
+      setMessage("Mobile number is required")
+      return
+    }
+
+    if (form.mobileNumber.trim().length < 8) {
+      setMessage("Enter a valid mobile number")
+      return
+    }
+
     setLoading(true)
+
+    const finalDateReceived =
+      form.dateReceived && form.dateReceived.trim()
+        ? form.dateReceived
+        : today
 
     const totalAmount =
       Number(form.repairAmount || 0) + Number(form.courierCharge || 0)
@@ -39,7 +58,6 @@ function AddRepairForm({ onDone }) {
     try {
       const docRef = doc(db, "repairs", form.serialNumber.trim())
 
-      // ❗ Prevent overwrite
       const existing = await getDoc(docRef)
       if (existing.exists()) {
         setMessage("This serial number already exists")
@@ -49,6 +67,8 @@ function AddRepairForm({ onDone }) {
 
       await setDoc(docRef, {
         ...form,
+        mobileNumber: form.mobileNumber.trim(), // ✅ always stored
+        dateReceived: finalDateReceived,
         repairAmount: Number(form.repairAmount),
         courierCharge: Number(form.courierCharge),
         totalAmount,
@@ -56,47 +76,29 @@ function AddRepairForm({ onDone }) {
       })
 
       setMessage("Repair record saved ✅")
+      setLoading(false)
 
-      setForm({
-        brand: "",
-        modelNumber: "",
-        serialNumber: "",
-        clientName: "",
-        mobileNumber: "",
-        city: "",
-        repairAmount: "",
-        courierCharge: "",
-        problemDescription: ""
-      })
+      /* ✅ NAVIGATE ONLY AFTER SUCCESS */
+      if (onDone) {
+        setTimeout(() => {
+          onDone()
+        }, 300)
+      }
 
-      if (onDone) onDone()
     } catch (err) {
       console.error(err)
-      setMessage("Something went wrong")
+      setMessage("Something went wrong while saving")
+      setLoading(false)
     }
-
-    setLoading(false)
   }
 
   return (
     <form className="form" onSubmit={handleSubmit}>
-      <h2>Add Device</h2>
+      <h2>Add New Device</h2>
 
-      <input
-        name="brand"
-        placeholder="Amplifier Brand"
-        value={form.brand}
-        onChange={handleChange}
-      />
+      <input name="brand" placeholder="Amplifier Brand" value={form.brand} onChange={handleChange} />
+      <input name="modelNumber" placeholder="Model Number" value={form.modelNumber} onChange={handleChange} />
 
-      <input
-        name="modelNumber"
-        placeholder="Model Number"
-        value={form.modelNumber}
-        onChange={handleChange}
-      />
-
-      {/* ✅ Serial ALWAYS editable */}
       <input
         name="serialNumber"
         placeholder="Serial Number *"
@@ -114,15 +116,17 @@ function AddRepairForm({ onDone }) {
       <input
         name="mobileNumber"
         inputMode="numeric"
-        placeholder="Mobile Number"
+        placeholder="Mobile Number *"
         value={form.mobileNumber}
         onChange={handleChange}
       />
 
+      <input name="city" placeholder="City / Address" value={form.city} onChange={handleChange} />
+
       <input
-        name="city"
-        placeholder="City / Address"
-        value={form.city}
+        type="date"
+        name="dateReceived"
+        value={form.dateReceived}
         onChange={handleChange}
       />
 

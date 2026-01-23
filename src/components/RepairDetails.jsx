@@ -4,6 +4,7 @@ function RepairDetails({ data, onEdit }) {
   return (
     <div className="details">
       <h2>Repair Details</h2>
+      <p><strong>Date Received:</strong> {data.dateReceived || "—"}</p>
 
       <p><strong>Brand:</strong> {data.brand}</p>
       <p><strong>Model:</strong> {data.modelNumber}</p>

@@ -203,3 +203,29 @@ textarea {
   color: #000;
   border: none;
 }
+
+.search-or {
+  text-align: center;
+  font-size: 14px;
+  color: #888;
+}
+
+.results-list {
+  margin-top: 16px;
+}
+
+.result-card {
+  background: #fff;
+  padding: 14px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  cursor: pointer;
+}
+
+.result-card p {
+  margin: 4px 0;
+}
+
+.result-card:active {
+  transform: scale(0.98);
+}
